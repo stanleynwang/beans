@@ -185,7 +185,7 @@ def send_group_lunch_matched_email(user, participants, meeting_spec, restaurant_
     send_single_email(
         user.email,
         'Yelp Beans Group Lunch',
-        'group_lunch_matched_email.html',
+        'group_lunch_match_email.html',
         {
             'user': user,
             'participants': participants,
