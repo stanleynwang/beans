@@ -130,6 +130,7 @@ class Restaurant(ndb.Model):
             - address:              Address of the Restaurant
             - photo_url:            Url of Restaurant photo
     """
+    index = ndb.IntegerProperty()
     name = ndb.StringProperty()
     address = ndb.StringProperty()
     photo_url = ndb.TextProperty()
