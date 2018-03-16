@@ -190,7 +190,7 @@ def send_group_lunch_matched_email(user, participants, meeting_spec, restaurants
             'user': user,
             'participants': participants,
             'restaurants': restaurants,
-            'location': subscription.office + " " + subscription.location,
+            'location': "Meet in Lobby of " + subscription.office,
             'meeting_title': subscription.title,
             'meeting_start_day': meeting_datetime.strftime('%A'),
             'meeting_start_date': meeting_datetime.strftime('%m/%d/%Y'),
@@ -214,7 +214,7 @@ def send_batch_group_lunch_unmatched_email(unmatched):
         send_single_email(
             user.email,
             'Your yelp-beans meeting this week',
-            'group_lunch_unmatched_email.html',
+            'unmatched_email.html',
             {'first_name': user.first_name}
         )
 
