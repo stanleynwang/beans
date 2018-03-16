@@ -47,10 +47,9 @@
                         <img style="border-radius:50%;width:80px" src={{restaurant.photo_url}}>
                     </td>
                     <td width="30px">
-                        <p><a href="{{participant.metadata.get('company_profile_url')}}">{{restaurant.name}}</a>
+                        <p><a>{{restaurant.name}}</a>
                         </p>
                         <p>{{restaurant.address}}</p>
-                        <p>{{participant.metadata.get('business_title')}}</p>
                     </td>
                     {% endfor %}
                 </tr>

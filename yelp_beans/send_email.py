@@ -158,7 +158,7 @@ def send_match_email(user, participants, meeting_spec):
     )
 
 
-def send_batch_group_lunch_matched_email(match, meeting_spec, restaurant_name):
+def send_batch_group_lunch_matched_email(match, meeting_spec, restaurants):
     participants = {participant.key for participant in match if isinstance(participant, User)}
     for participant in participants:
         others = participants - {participant}
@@ -166,17 +166,17 @@ def send_batch_group_lunch_matched_email(match, meeting_spec, restaurant_name):
             participant.get(),
             [participant.get() for participant in others],
             meeting_spec,
-            restaurant_name,
+            restaurants,
         )
 
 
-def send_group_lunch_matched_email(user, participants, meeting_spec, restaurant_name):
+def send_group_lunch_matched_email(user, participants, meeting_spec, restaurants):
     """
     Sends an email to one of the matches for the week
         user - user receiving the email
         participants - other people in the meeting
         meeting_spec - meeting specification
-        restaurant_name - name of restaurant
+        restaurants - list of suggested restaurants
     """
     meeting_datetime = get_meeting_datetime(meeting_spec)
     meeting_datetime_end = meeting_datetime + datetime.timedelta(minutes=90)
@@ -189,7 +189,8 @@ def send_group_lunch_matched_email(user, participants, meeting_spec, restaurant_
         {
             'user': user,
             'participants': participants,
-            'location': restaurant_name,
+            'restaurants': restaurants,
+            'location': subscription.office + " " + subscription.location,
             'meeting_title': subscription.title,
             'meeting_start_day': meeting_datetime.strftime('%A'),
             'meeting_start_date': meeting_datetime.strftime('%m/%d/%Y'),

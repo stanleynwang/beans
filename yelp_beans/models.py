@@ -121,3 +121,15 @@ class MeetingParticipant(ndb.Model):
     """
     meeting = ndb.KeyProperty(kind="Meeting")
     user = ndb.KeyProperty(kind="User")
+
+
+class Restaurant(ndb.Model):
+    """Models a restaurant
+        Schema:
+            - name:                 Name of the Restaurant
+            - address:              Address of the Restaurant
+            - photo_url:            Url of Restaurant photo
+    """
+    name = ndb.StringProperty()
+    address = ndb.StringProperty()
+    photo_url = ndb.TextProperty()

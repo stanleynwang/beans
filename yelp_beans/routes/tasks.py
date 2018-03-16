@@ -77,8 +77,8 @@ def match_employees():
 
         if 'Lunch' in spec.meeting_subscription.get().title:
             for match in matches:
-                restaurant_name = generate_restaurant(match, group_size)
-                send_batch_group_lunch_matched_email(match, spec, restaurant_name)
+                restaurants = generate_restaurant(match, group_size)
+                send_batch_group_lunch_matched_email(match, spec, restaurants)
             send_batch_group_lunch_unmatched_email(unmatched)
         else:
             send_batch_unmatched_email(unmatched)
