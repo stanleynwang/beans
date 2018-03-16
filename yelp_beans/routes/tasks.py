@@ -8,6 +8,7 @@ import logging
 from flask import Blueprint
 
 from yelp_beans.logic.data_ingestion import DataIngestion
+from yelp_beans.logic.group_lunch import generate_restaurant
 from yelp_beans.logic.meeting_spec import get_meeting_datetime
 from yelp_beans.logic.meeting_spec import get_specs_for_current_week
 from yelp_beans.logic.subscription import get_specs_from_subscription
@@ -19,6 +20,8 @@ from yelp_beans.models import Meeting
 from yelp_beans.models import MeetingParticipant
 from yelp_beans.models import MeetingRequest
 from yelp_beans.models import MeetingSubscription
+from yelp_beans.send_email import send_batch_group_lunch_matched_email
+from yelp_beans.send_email import send_batch_group_lunch_unmatched_email
 from yelp_beans.send_email import send_batch_meeting_confirmation_email
 from yelp_beans.send_email import send_batch_unmatched_email
 from yelp_beans.send_email import send_batch_weekly_opt_in_email
@@ -72,8 +75,14 @@ def match_employees():
         matches, unmatched = generate_meetings(users, spec, prev_meeting_tuples=None, group_size=group_size)
         save_meetings(matches, spec)
 
-        send_batch_unmatched_email(unmatched)
-        send_batch_meeting_confirmation_email(matches, spec)
+        if spec.meeting_subscription.get().title == 'Group Lunches':
+            for match in matches:
+                restaurant_name = generate_restaurant(match, group_size)
+                send_batch_group_lunch_matched_email(match, spec, restaurant_name)
+            send_batch_group_lunch_unmatched_email(unmatched)
+        else:
+            send_batch_unmatched_email(unmatched)
+            send_batch_meeting_confirmation_email(matches, spec)
     return "OK"
 
 

@@ -158,6 +158,66 @@ def send_match_email(user, participants, meeting_spec):
     )
 
 
+def send_batch_group_lunch_matched_email(match, meeting_spec, restaurant_name):
+    participants = {participant.key for participant in match if isinstance(participant, User)}
+    for participant in participants:
+        others = participants - {participant}
+        send_group_lunch_matched_email(
+            participant.get(),
+            [participant.get() for participant in others],
+            meeting_spec,
+            restaurant_name,
+        )
+
+
+def send_group_lunch_matched_email(user, participants, meeting_spec, restaurant_name):
+    """
+    Sends an email to one of the matches for the week
+        user - user receiving the email
+        participants - other people in the meeting
+        meeting_spec - meeting specification
+        restaurant_name - name of restaurant
+    """
+    meeting_datetime = get_meeting_datetime(meeting_spec)
+    meeting_datetime_end = meeting_datetime + datetime.timedelta(minutes=90)
+    subscription = meeting_spec.meeting_subscription.get()
+
+    send_single_email(
+        user.email,
+        'Yelp Beans Group Lunch',
+        'group_lunch_matched_email.html',
+        {
+            'user': user,
+            'participants': participants,
+            'location': restaurant_name,
+            'meeting_title': subscription.title,
+            'meeting_start_day': meeting_datetime.strftime('%A'),
+            'meeting_start_date': meeting_datetime.strftime('%m/%d/%Y'),
+            'meeting_start_time': meeting_datetime.strftime('%I:%M %p %Z'),
+            'meeting_end_time': meeting_datetime_end.strftime('%I:%M %p %Z'),
+            'calendar_invite_url': create_google_calendar_invitation_link(
+                participants,
+                subscription.title,
+                subscription.office,
+                subscription.location,
+                meeting_datetime,
+                meeting_datetime_end
+            ),
+        }
+    )
+
+
+def send_batch_group_lunch_unmatched_email(unmatched):
+    for user in unmatched:
+        user = user.key.get()
+        send_single_email(
+            user.email,
+            'Your yelp-beans meeting this week',
+            'group_lunch_unmatched_email.html',
+            {'first_name': user.first_name}
+        )
+
+
 def create_google_calendar_invitation_link(user_list, title, office, location, meeting_datetime, end_time):
     invite_url = "https://www.google.com/calendar/render?action=TEMPLATE&"
     url_params = {
