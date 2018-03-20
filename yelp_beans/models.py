@@ -134,3 +134,4 @@ class Restaurant(ndb.Model):
     name = ndb.StringProperty()
     address = ndb.StringProperty()
     photo_url = ndb.TextProperty()
+    phone_number = ndb.StringProperty()
