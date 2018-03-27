@@ -8,8 +8,11 @@ import random
 from yelp_beans.models import Restaurant
 
 
-def generate_restaurant(match, group_size):
+def generate_restaurant_picks(matches):
     count = Restaurant.query().order(-Restaurant.index).get().index + 1
-    chosen_restaurant_id = random.randint(0, count)
-    chosen_restaurant = Restaurant.query().filter(Restaurant.index == chosen_restaurant_id).get()
-    return [chosen_restaurant]
+    picks = []
+    for _ in matches:
+        chosen_restaurant_id = random.randint(0, count)
+        chosen_restaurant = Restaurant.query().filter(Restaurant.index == chosen_restaurant_id).get()
+        picks.append(chosen_restaurant)
+    return picks

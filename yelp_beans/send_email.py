@@ -158,16 +158,17 @@ def send_match_email(user, participants, meeting_spec):
     )
 
 
-def send_batch_group_lunch_matched_email(match, meeting_spec, restaurants):
-    participants = {participant.key for participant in match if isinstance(participant, User)}
-    for participant in participants:
-        others = participants - {participant}
-        send_group_lunch_matched_email(
-            participant.get(),
-            [participant.get() for participant in others],
-            meeting_spec,
-            restaurants,
-        )
+def send_batch_group_lunch_matched_email(matches, meeting_spec, restaurants):
+    for match in matches:
+        participants = {participant.key for participant in match if isinstance(participant, User)}
+        for participant in participants:
+            others = participants - {participant}
+            send_group_lunch_matched_email(
+                participant.get(),
+                [participant.get() for participant in others],
+                meeting_spec,
+                restaurants,
+            )
 
 
 def send_group_lunch_matched_email(user, participants, meeting_spec, restaurants):
