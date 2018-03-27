@@ -7,6 +7,7 @@ import logging
 
 from flask import Blueprint
 
+from yelp_beans.enums import ActivityType
 from yelp_beans.logic.data_ingestion import DataIngestion
 from yelp_beans.logic.group_lunch import generate_restaurant
 from yelp_beans.logic.meeting_spec import get_meeting_datetime
@@ -75,7 +76,7 @@ def match_employees():
         matches, unmatched = generate_meetings(users, spec, prev_meeting_tuples=None, group_size=group_size)
         save_meetings(matches, spec)
 
-        if 'Lunch' in spec.meeting_subscription.get().title:
+        if spec.meeting_subscription.get().activity_type == ActivityType.lunch.value:
             for match in matches:
                 restaurants = generate_restaurant(match, group_size)
                 send_batch_group_lunch_matched_email(match, spec, restaurants)

@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 
 from google.appengine.ext import ndb
 
+from yelp_beans.enums import ActivityType
+
 
 class User(ndb.Model):
     """ Models a Yelp employee.
@@ -52,6 +54,10 @@ class MeetingSubscription(ndb.Model):
     user_rules = ndb.KeyProperty(kind="Rule", repeated=True)
     dept_rules = ndb.KeyProperty(kind="Rule", repeated=True)
     rule_logic = ndb.StringProperty()
+    activity_type = ndb.StringProperty(
+        choices=[activity.value for activity in ActivityType],
+        default=ActivityType.basic.value,
+    )
 
 
 class Rule(ndb.Model):
