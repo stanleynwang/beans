@@ -5,7 +5,12 @@ from __future__ import unicode_literals
 
 import random
 
+from yelp_beans.enums import ActivityType
 from yelp_beans.models import Restaurant
+
+
+def is_lunch_match(activity_type):
+    return activity_type == ActivityType.lunch.value
 
 
 def generate_restaurant_picks(matches):
